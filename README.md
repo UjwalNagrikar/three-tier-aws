@@ -147,8 +147,8 @@ terraform destroy
 ## 👤 Author
 
 **Ujjwal Nagrikar**
-📧 [ujjwalnagrikar@mail.com](mailto:ujjwalnagrikar@mail.com)
-📱 +91 84463 62075
+📧 [ujjwalnagrikar@mail.com](mailto:ujjwalnagrikar@mail.com)  <br>
+📱 +91 84463 62075 <br>
 🔗 [LinkedIn](https://www.linkedin.com/in/ujjwal-nagrikar-2631aa273/)
 
 ---
