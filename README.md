@@ -1,464 +1,151 @@
-# AWS Three-Tier Architecture Deployment Guide
+Here's a professional `README.md` file for your **Three-Tier Architecture on AWS using Terraform** project:
 
-## Overview
+---
 
-This project implements a highly available and scalable three-tier architecture on AWS using Terraform. The architecture includes:
+# 🏗️ Three-Tier Architecture on AWS using Terraform
 
-### Components Included:
-- **VPC**: Virtual Private Cloud with public and private subnets
-- **ASG**: Auto Scaling Groups for web and application tiers
-- **CDN**: CloudFront distribution for content delivery
-- **ELB**: Application Load Balancer for traffic distribution
-- **EC2**: Auto-scaled instances with user data scripts
-- **S3**: Static asset storage
-- **NAT**: NAT Gateways for private subnet internet access
-- **API Gateway**: RESTful API endpoints
-- **RDS**: MySQL database in private subnets
+This project demonstrates the deployment of a **highly available** and **scalable** three-tier architecture on **Amazon Web Services (AWS)** using **Terraform**. The architecture includes a **web tier**, **application tier**, and **database tier**, with automated infrastructure provisioning and configuration using Terraform and `user_data.sh` scripts.
 
-## Architecture Overview
+---
+
+## 📌 Key Features
+
+* ✅ **Infrastructure as Code (IaC)** using Terraform
+* 🌐 **Highly available and scalable** deployment across multiple Availability Zones
+* ⚙️ Automated provisioning of:
+
+  * VPC with public and private subnets
+  * Internet Gateway and NAT Gateways
+  * Application Load Balancer (ALB)
+  * Auto Scaling Groups (ASGs)
+  * EC2 instances with user data scripts
+  * RDS (MySQL) instance in private subnet
+  * S3 Bucket + CloudFront CDN for static content
+  * API Gateway for application layer
+* 🔐 Security Groups to isolate each tier
+
+---
+
+## 🧱 AWS Components Involved
+
+* **VPC** (Virtual Private Cloud)
+* **Subnets** (Public & Private)
+* **Internet Gateway (IGW)**
+* **NAT Gateway**
+* **EC2 Instances** (Amazon Linux / Ubuntu)
+* **Auto Scaling Groups (ASG)**
+* **Elastic Load Balancer (ALB)**
+* **Amazon RDS (MySQL)**
+* **Amazon S3**
+* **CloudFront CDN**
+* **API Gateway**
+* **Security Groups**
+
+---
+
+## 📂 Project Structure
 
 ```
-Internet → CloudFront → ALB → Web Tier (Public Subnets)
-                                ↓
-                          App Tier (Private Subnets)
-                                ↓
-                          DB Tier (Private Subnets)
+.
+├── main.tf              # Main Terraform configuration for all resources
+├── variables.tf         # Variables used across the configuration
+├── provider.tf          # AWS provider and region configuration
+├── output.tf            # Outputs like ALB DNS, API endpoints, etc.
+├── user_data.sh         # Bootstrap script for EC2 web instances
+└── README.md            # Project documentation
 ```
 
-## Prerequisites
+---
 
-1. **AWS Account**: Active AWS account with appropriate permissions
-2. **Terraform**: Install Terraform (version >= 1.0)
-3. **AWS CLI**: Install and configure AWS CLI
-4. **IAM Permissions**: Ensure your AWS user has the following permissions:
-   - EC2 Full Access
-   - VPC Full Access
-   - S3 Full Access
-   - RDS Full Access
-   - CloudFront Full Access
-   - API Gateway Full Access
-   - IAM (for roles and policies)
+## 🚀 How to Deploy
 
-## Installation Steps
+> Ensure you have:
+>
+> * AWS account with IAM permissions
+> * Terraform installed and configured
 
-### Step 1: Install Required Tools
-
-```bash
-# Install Terraform (macOS)
-brew install terraform
-
-# Install Terraform (Linux)
-wget https://releases.hashicorp.com/terraform/1.6.0/terraform_1.6.0_linux_amd64.zip
-unzip terraform_1.6.0_linux_amd64.zip
-sudo mv terraform /usr/local/bin/
-
-# Install AWS CLI
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./aws/install
-```
-
-### Step 2: Configure AWS CLI
-
-```bash
-aws configure
-# Enter your AWS Access Key ID
-# Enter your AWS Secret Access Key
-# Enter your preferred region (e.g., us-east-1)
-# Enter output format (json)
-```
-
-### Step 3: Clone and Prepare Project
-
-```bash
-# Create project directory
-mkdir three-tier-aws-terraform
-cd three-tier-aws-terraform
-
-# Create the main Terraform file (copy the provided main.tf content)
-# Create the terraform.tfvars file (copy the provided content)
-```
-
-### Step 4: Initialize Terraform
+### 1️⃣ Initialize Terraform
 
 ```bash
 terraform init
 ```
 
-### Step 5: Review and Plan
+### 2️⃣ Review Plan
 
 ```bash
-# Review the execution plan
 terraform plan
-
-# Save the plan to a file
-terraform plan -out=tfplan
 ```
 
-### Step 6: Deploy Infrastructure
+### 3️⃣ Apply Infrastructure
 
 ```bash
-# Apply the configuration
 terraform apply
-
-# Or apply with the saved plan
-terraform apply tfplan
 ```
 
-## Post-Deployment Configuration
+### 4️⃣ Access Outputs
 
-### 1. Upload Static Assets to S3
+After a successful apply, Terraform will display outputs like:
+
+* ✅ Load Balancer URL
+* ✅ API Gateway Endpoint
+* ✅ CloudFront Distribution URL
+
+---
+
+## 💡 User Data Script
+
+The `user_data.sh` file is executed on web tier EC2 instances to:
+
+* Install and start the Apache HTTP Server
+* Render dynamic instance metadata into the index page (instance ID, AZ)
+
+---
+
+## 📈 Auto Scaling & High Availability
+
+* EC2 instances are launched across **multiple Availability Zones**
+* ASGs adjust capacity based on demand
+* NAT Gateways ensure private subnets have outbound internet access
+
+---
+
+## 🔐 Security
+
+* Each tier is protected by its own **Security Group**
+* Principle of **least privilege** followed between web, app, and DB layers
+
+---
+
+## 🌍 API Gateway
+
+* Provides a RESTful endpoint (`/health`) to verify service status
+* Integrated with the application logic for extensibility
+
+---
+
+## ⚠️ Notes
+
+* CloudFront setup may require AWS account verification. If you receive `AccessDenied` errors, [contact AWS Support](https://console.aws.amazon.com/support/home#/).
+* Ensure your credentials are set up with `aws configure` or via environment variables.
+
+---
+
+## 🧹 Cleanup
+
+To destroy the infrastructure:
 
 ```bash
-# Get S3 bucket name from Terraform output
-S3_BUCKET=$(terraform output -raw s3_bucket_name)
-
-# Upload sample files
-echo "<h1>Welcome to Our Application</h1>" > index.html
-aws s3 cp index.html s3://$S3_BUCKET/
-```
-
-### 2. Test the Application
-
-```bash
-# Get Load Balancer DNS
-ALB_DNS=$(terraform output -raw load_balancer_dns)
-echo "Application URL: http://$ALB_DNS"
-
-# Get CloudFront URL
-CF_URL=$(terraform output -raw cloudfront_distribution_domain)
-echo "CloudFront URL: https://$CF_URL"
-
-# Get API Gateway URL
-API_URL=$(terraform output -raw api_gateway_url)
-echo "API URL: $API_URL/health"
-```
-
-### 3. Verify Components
-
-```bash
-# Test Load Balancer
-curl http://$ALB_DNS
-
-# Test API Gateway
-curl $API_URL/health
-
-# Test CloudFront (may take 15-20 minutes to deploy)
-curl https://$CF_URL
-```
-
-## Monitoring and Maintenance
-
-### CloudWatch Monitoring
-
-The infrastructure automatically includes:
-- Auto Scaling metrics
-- Load Balancer health checks
-- RDS monitoring
-- CloudFront metrics
-
-### Scaling Configuration
-
-- **Web Tier**: Min 2, Max 6 instances
-- **App Tier**: Min 2, Max 6 instances
-- **Database**: Single instance with automated backups
-
-### Security Features
-
-- **Security Groups**: Restrictive inbound rules
-- **Private Subnets**: App and DB tiers not directly accessible
-- **NAT Gateways**: Secure outbound internet access
-- **S3 Bucket**: Public access blocked, CloudFront access only
-
-## Cost Optimization
-
-### Current Configuration Costs (Estimated Monthly):
-- **EC2 Instances**: ~$30-60 (t3.micro instances)
-- **RDS MySQL**: ~$15-25 (db.t3.micro)
-- **NAT Gateways**: ~$32-64 (2 gateways)
-- **Load Balancer**: ~$16-23
-- **CloudFront**: ~$1-10 (depends on usage)
-- **S3**: ~$1-5 (depends on storage)
-
-### Cost Optimization Tips:
-1. Use Reserved Instances for predictable workloads
-2. Consider using a single NAT Gateway for development
-3. Enable S3 Intelligent Tiering
-4. Use CloudWatch to monitor unused resources
-
-## Troubleshooting
-
-### Common Issues:
-
-1. **Terraform Apply Fails**
-   ```bash
-   # Check AWS credentials
-   aws sts get-caller-identity
-   
-   # Verify region availability
-   aws ec2 describe-availability-zones --region us-east-1
-   ```
-
-2. **Database Connection Issues**
-   ```bash
-   # Check security group rules
-   aws ec2 describe-security-groups --group-ids <db-security-group-id>
-   
-   # Test connectivity from app tier
-   mysql -h <rds-endpoint> -u admin -p
-   ```
-
-3. **Load Balancer Health Check Failures**
-   ```bash
-   # Check target group health
-   aws elbv2 describe-target-health --target-group-arn <target-group-arn>
-   
-   # SSH into instances to debug
-   aws ec2 describe-instances --filters "Name=tag:Name,Values=*web*"
-   ```
-
-4. **CloudFront Distribution Not Working**
-   - Wait 15-20 minutes for distribution to deploy
-   - Check Origin Access Identity configuration
-   - Verify S3 bucket policy
-
-### Debug Commands:
-
-```bash
-# Check Terraform state
-terraform state list
-terraform state show aws_lb.main
-
-# View outputs
-terraform output
-
-# Check AWS resources
-aws ec2 describe-instances
-aws elbv2 describe-load-balancers
-aws rds describe-db-instances
-```
-
-## Customization Options
-
-### Scaling Configuration
-
-Edit the Auto Scaling Group settings in main.tf:
-
-```hcl
-resource "aws_autoscaling_group" "web" {
-  min_size         = 2    # Minimum instances
-  max_size         = 10   # Maximum instances
-  desired_capacity = 4    # Initial instances
-  # ... other configuration
-}
-```
-
-### Instance Types
-
-Change instance types for different performance needs:
-
-```hcl
-resource "aws_launch_template" "web" {
-  instance_type = "t3.small"  # Change from t3.micro
-  # ... other configuration
-}
-```
-
-### Database Configuration
-
-Modify RDS settings:
-
-```hcl
-resource "aws_db_instance" "main" {
-  instance_class = "db.t3.small"  # Upgrade instance class
-  allocated_storage = 100         # Increase storage
-  # ... other configuration
-}
-```
-
-## Advanced Features
-
-### SSL/TLS Configuration
-
-Add SSL certificate to Application Load Balancer:
-
-```hcl
-resource "aws_lb_listener" "web_https" {
-  load_balancer_arn = aws_lb.main.arn
-  port              = "443"
-  protocol          = "HTTPS"
-  ssl_policy        = "ELBSecurityPolicy-TLS-1-2-2017-01"
-  certificate_arn   = aws_acm_certificate.main.arn
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.web.arn
-  }
-}
-```
-
-### Custom Domain Configuration
-
-Add Route 53 hosted zone and records:
-
-```hcl
-resource "aws_route53_zone" "main" {
-  name = "yourdomain.com"
-}
-
-resource "aws_route53_record" "web" {
-  zone_id = aws_route53_zone.main.zone_id
-  name    = "app.yourdomain.com"
-  type    = "A"
-
-  alias {
-    name                   = aws_lb.main.dns_name
-    zone_id                = aws_lb.main.zone_id
-    evaluate_target_health = true
-  }
-}
-```
-
-### Enhanced Monitoring
-
-Add CloudWatch alarms:
-
-```hcl
-resource "aws_cloudwatch_metric_alarm" "high_cpu" {
-  alarm_name          = "high-cpu-utilization"
-  comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = "2"
-  metric_name         = "CPUUtilization"
-  namespace           = "AWS/EC2"
-  period              = "120"
-  statistic           = "Average"
-  threshold           = "80"
-  alarm_description   = "This metric monitors ec2 cpu utilization"
-  alarm_actions       = [aws_sns_topic.alerts.arn]
-}
-```
-
-## Security Best Practices
-
-### 1. Enable VPC Flow Logs
-
-```hcl
-resource "aws_flow_log" "vpc_flow_log" {
-  iam_role_arn    = aws_iam_role.flow_log.arn
-  log_destination = aws_cloudwatch_log_group.vpc_flow_log.arn
-  traffic_type    = "ALL"
-  vpc_id          = aws_vpc.main.id
-}
-```
-
-### 2. Enable GuardDuty
-
-```hcl
-resource "aws_guardduty_detector" "main" {
-  enable = true
-}
-```
-
-### 3. Use AWS Systems Manager for Instance Management
-
-```hcl
-resource "aws_iam_role" "ssm_role" {
-  name = "SSMRole"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      }
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "ssm_policy" {
-  role       = aws_iam_role.ssm_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-}
-```
-
-## Backup and Disaster Recovery
-
-### Database Backups
-
-The RDS instance includes:
-- Automated daily backups (7-day retention)
-- Point-in-time recovery
-- Maintenance windows during low-traffic periods
-
-### Multi-Region Deployment
-
-For disaster recovery, consider:
-
-```hcl
-# Create RDS read replica in another region
-resource "aws_db_instance" "replica" {
-  provider = aws.us_west_2
-  
-  identifier             = "${var.project_name}-replica"
-  replicate_source_db    = aws_db_instance.main.id
-  instance_class         = "db.t3.micro"
-  publicly_accessible    = false
-  auto_minor_version_upgrade = false
-}
-```
-
-## Cleanup
-
-### Destroy Infrastructure
-
-```bash
-# Remove all resources
 terraform destroy
-
-# Confirm by typing 'yes' when prompted
 ```
 
-### Manual Cleanup (if needed)
+---
 
-Some resources might need manual cleanup:
+## 👤 Author
 
-```bash
-# Delete S3 bucket contents
-aws s3 rm s3://<bucket-name> --recursive
+**Ujjwal Nagrikar**
+📧 [ujjwalnagrikar@mail.com](mailto:ujjwalnagrikar@mail.com)
+📱 +91 84463 62075
+🔗 [LinkedIn](https://www.linkedin.com/in/ujjwal-nagrikar-2631aa273/)
 
-# Delete CloudFront distribution (if not deleted automatically)
-aws cloudfront get-distribution-config --id <distribution-id>
-aws cloudfront delete-distribution --id <distribution-id> --if-match <etag>
-```
+---
 
-## Additional Resources
-
-### Documentation Links
-- [Terraform AWS Provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs)
-- [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
-- [AWS Auto Scaling User Guide](https://docs.aws.amazon.com/autoscaling/)
-
-### Learning Resources
-- [AWS Solutions Architect Associate](https://aws.amazon.com/certification/certified-solutions-architect-associate/)
-- [Terraform Associate Certification](https://www.hashicorp.com/certification/terraform-associate)
-
-### Community Support
-- [Terraform Community Forum](https://discuss.hashicorp.com/c/terraform-core)
-- [AWS re:Post](https://repost.aws/)
-- [Reddit r/Terraform](https://www.reddit.com/r/Terraform/)
-
-## Conclusion
-
-This three-tier architecture provides a solid foundation for scalable web applications on AWS. The infrastructure is designed with high availability, security, and cost optimization in mind. 
-
-Remember to:
-- Monitor your AWS costs regularly
-- Keep your Terraform state file secure
-- Update security groups and access policies as needed
-- Regular backup and test your disaster recovery procedures
-
-For production deployments, consider implementing additional security measures, monitoring, and compliance requirements specific to your organization.
