@@ -152,5 +152,3 @@ terraform destroy
 🔗 [LinkedIn](https://www.linkedin.com/in/ujjwal-nagrikar-2631aa273/)
 
 ---
-
-Let me know if you'd like this exported as a PDF or markdown file.
