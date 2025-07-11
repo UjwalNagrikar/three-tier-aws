@@ -1,11 +1,9 @@
-Great! That badge section is a nice visual touch for your `README.md`.
-
-Here’s your updated **`README.md`** with the badges included at the top:
+Here's a professional `README.md` file for your **Three-Tier Architecture on AWS using Terraform** project:
 
 ---
 
-```markdown
 # 🏗️ Three-Tier Architecture on AWS using Terraform
+
 
 ![Terraform](https://img.shields.io/badge/Terraform-1.0%2B-purple?logo=terraform)
 ![AWS](https://img.shields.io/badge/AWS-Cloud-orange?logo=amazon-aws)
@@ -16,65 +14,65 @@ This project demonstrates the deployment of a **highly available** and **scalabl
 
 ## 📌 Key Features
 
-- ✅ **Infrastructure as Code (IaC)** using Terraform
-- 🌐 **Highly available and scalable** deployment across multiple Availability Zones
-- ⚙️ Automated provisioning of:
-  - VPC with public and private subnets
-  - Internet Gateway and NAT Gateways
-  - Application Load Balancer (ALB)
-  - Auto Scaling Groups (ASGs)
-  - EC2 instances with user data scripts
-  - RDS (MySQL) instance in private subnet
-  - S3 Bucket + CloudFront CDN for static content
-  - API Gateway for application layer
-- 🔐 Security Groups to isolate each tier
+* ✅ **Infrastructure as Code (IaC)** using Terraform
+* 🌐 **Highly available and scalable** deployment across multiple Availability Zones
+* ⚙️ Automated provisioning of:
+
+  * VPC with public and private subnets
+  * Internet Gateway and NAT Gateways
+  * Application Load Balancer (ALB)
+  * Auto Scaling Groups (ASGs)
+  * EC2 instances with user data scripts
+  * RDS (MySQL) instance in private subnet
+  * S3 Bucket + CloudFront CDN for static content
+  * API Gateway for application layer
+* 🔐 Security Groups to isolate each tier
 
 ---
 
 ## 🧱 AWS Components Involved
 
-- **VPC** (Virtual Private Cloud)
-- **Subnets** (Public & Private)
-- **Internet Gateway (IGW)**
-- **NAT Gateway**
-- **EC2 Instances** (Amazon Linux / Ubuntu)
-- **Auto Scaling Groups (ASG)**
-- **Elastic Load Balancer (ALB)**
-- **Amazon RDS (MySQL)**
-- **Amazon S3**
-- **CloudFront CDN**
-- **API Gateway**
-- **Security Groups**
+* **VPC** (Virtual Private Cloud)
+* **Subnets** (Public & Private)
+* **Internet Gateway (IGW)**
+* **NAT Gateway**
+* **EC2 Instances** (Amazon Linux / Ubuntu)
+* **Auto Scaling Groups (ASG)**
+* **Elastic Load Balancer (ALB)**
+* **Amazon RDS (MySQL)**
+* **Amazon S3**
+* **CloudFront CDN**
+* **API Gateway**
+* **Security Groups**
 
 ---
 
 ## 📂 Project Structure
 
 ```
-
 .
 ├── main.tf              # Main Terraform configuration for all resources
 ├── variables.tf         # Variables used across the configuration
 ├── provider.tf          # AWS provider and region configuration
 ├── output.tf            # Outputs like ALB DNS, API endpoints, etc.
-├── user\_data.sh         # Bootstrap script for EC2 web instances
+├── user_data.sh         # Bootstrap script for EC2 web instances
 └── README.md            # Project documentation
-
-````
+```
 
 ---
 
 ## 🚀 How to Deploy
 
 > Ensure you have:
-> - AWS account with IAM permissions
-> - Terraform installed and configured
+>
+> * AWS account with IAM permissions
+> * Terraform installed and configured
 
 ### 1️⃣ Initialize Terraform
 
 ```bash
 terraform init
-````
+```
 
 ### 2️⃣ Review Plan
 
@@ -153,7 +151,6 @@ terraform destroy
 📱 +91 84463 62075
 🔗 [LinkedIn](https://www.linkedin.com/in/ujjwal-nagrikar-2631aa273/)
 
-```
+---
 
-Let me know if you’d like this file saved and exported as `README.md`.
-```
+Let me know if you'd like this exported as a PDF or markdown file.
